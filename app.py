@@ -16,17 +16,17 @@ from linebot import (
     LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
-	InvalidSignatureError
+    InvalidSignatureError
 )
 from linebot.models import (
-	MessageEvent, TextMessage, TextSendMessage, ImageSendMessage, SourceGroup, SourceRoom,
-	TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
-	ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
-	PostbackTemplateAction, DatetimePickerTemplateAction,
-	CarouselTemplate, CarouselColumn, PostbackEvent,
-	StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
-	ImageMessage, VideoMessage, AudioMessage, FileMessage,
-	UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
+    MessageEvent, TextMessage, TextSendMessage, ImageSendMessage, SourceGroup, SourceRoom,
+    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
+    PostbackTemplateAction, DatetimePickerTemplateAction,
+    CarouselTemplate, CarouselColumn, PostbackEvent,
+    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
+    ImageMessage, VideoMessage, AudioMessage, FileMessage,
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 translator = Translator()
 wiki_settings = {}
@@ -53,95 +53,95 @@ def callback():
     return 'OK'
 
 def split2(text):
-	return text.split('/kbbi ', 1)[-1]
-	
+    return text.split('/kbbi ', 1)[-1]
+    
 def split3(text):
-	return text.split('/echo ', 1)[-1]
+    return text.split('/echo ', 1)[-1]
 
 def split5(text):
-	return text.split('/trans ', 1)[-1]
+    return text.split('/trans ', 1)[-1]
 
 def split6(text):
-	return text.split('/wiki ', 1)[-1]
+    return text.split('/wiki ', 1)[-1]
 
 def split7(text):
-	return text.split('/wikilang ', 1)[-1]
-	
+    return text.split('/wikilang ', 1)[-1]
+    
 def split8(text):
-		return text.split('/urban ', 1)[-1]
+        return text.split('/urban ', 1)[-1]
 
 def trans(word):
-	sc = 'en'
-	to = 'id'
-	
-	if word[0:].lower().strip().startswith('sc='):
-		sc = word.split(', ', 1)[0]
-		sc = sc.split('sc=', 1)[-1]
-		word = word.split(', ', 1)[1]
+    sc = 'en'
+    to = 'id'
+    
+    if word[0:].lower().strip().startswith('sc='):
+        sc = word.split(', ', 1)[0]
+        sc = sc.split('sc=', 1)[-1]
+        word = word.split(', ', 1)[1]
 
-	if word[0:].lower().strip().startswith('to='):
-		to = word.split(', ', 1)[0]
-		to = to.split('to=', 1)[-1]
-		word = word.split(', ', 1)[1]
-		
-	if word[0:].lower().strip().startswith('sc='):
-		sc = word.split(', ', 1)[0]
-		sc = sc.split('sc=', 1)[-1]
-		word = word.split(', ', 1)[1]
-		
-	return translator.translate(word, src=sc, dest=to).text
-	
+    if word[0:].lower().strip().startswith('to='):
+        to = word.split(', ', 1)[0]
+        to = to.split('to=', 1)[-1]
+        word = word.split(', ', 1)[1]
+        
+    if word[0:].lower().strip().startswith('sc='):
+        sc = word.split(', ', 1)[0]
+        sc = sc.split('sc=', 1)[-1]
+        word = word.split(', ', 1)[1]
+        
+    return translator.translate(word, src=sc, dest=to).text
+    
 def wiki_get(keyword, set_id, trim=True):
    
-	try:
-		wikipedia.set_lang(wiki_settings[set_id])
-	except KeyError:
-		wikipedia.set_lang('en')
+    try:
+        wikipedia.set_lang(wiki_settings[set_id])
+    except KeyError:
+        wikipedia.set_lang('en')
 
-	try:
-		result = wikipedia.summary(keyword)
+    try:
+        result = wikipedia.summary(keyword)
 
-	except wikipedia.exceptions.DisambiguationError:
-		articles = wikipedia.search(keyword)
-		result = "{} disambiguation:".format(keyword)
-		for item in articles:
-			result += "\n{}".format(item)
-	except wikipedia.exceptions.PageError:
-		result = "{} not found!".format(keyword)
+    except wikipedia.exceptions.DisambiguationError:
+        articles = wikipedia.search(keyword)
+        result = "{} disambiguation:".format(keyword)
+        for item in articles:
+            result += "\n{}".format(item)
+    except wikipedia.exceptions.PageError:
+        result = "{} not found!".format(keyword)
 
-	else:
-		if trim:
-			result = result[:2000]
-			if not result.endswith('.'):
-				result = result[:result.rfind('.')+1]
-	return result
-	
+    else:
+        if trim:
+            result = result[:2000]
+            if not result.endswith('.'):
+                result = result[:result.rfind('.')+1]
+    return result
+    
 def wiki_lang(lang, set_id):
     
-	langs_dict = wikipedia.languages()
-	if lang in langs_dict.keys():
-		wiki_settings[set_id] = lang
-		return ("Language has been changed to {} successfully."
-				.format(langs_dict[lang]))
-	return ("{} not available!\n"
-			"See meta.wikimedia.org/wiki/List_of_Wikipedias for "
-			"a list of available languages, and use the prefix "
-			"in the Wiki column to set the language."
-			.format(lang))
-		
+    langs_dict = wikipedia.languages()
+    if lang in langs_dict.keys():
+        wiki_settings[set_id] = lang
+        return ("Language has been changed to {} successfully."
+                .format(langs_dict[lang]))
+    return ("{} not available!\n"
+            "See meta.wikimedia.org/wiki/List_of_Wikipedias for "
+            "a list of available languages, and use the prefix "
+            "in the Wiki column to set the language."
+            .format(lang))
+        
 def find_kbbi(keyword, ex=True):
     
-	try:
-		entry = KBBI(keyword)
-	except KBBI.TidakDitemukan as e:
-		result = str(e)
-	else:
-		result = "Definisi {}:\n".format(keyword)
-		if ex:
-			result += '\n'.join(entry.arti_contoh)
-		else:
-			result += str(entry)
-	return result
+    try:
+        entry = KBBI(keyword)
+    except KBBI.TidakDitemukan as e:
+        result = str(e)
+    else:
+        result = "Definisi {}:\n".format(keyword)
+        if ex:
+            result += '\n'.join(entry.arti_contoh)
+        else:
+            result += str(entry)
+    return result
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -153,35 +153,34 @@ def handle_message(event):
     profile_name = profile.display_name
     profile_picture = profile.picture_url
     profile_sm = profile.status_message
- 	if isinstance(event.source, SourceGroup):
-		subject = line_bot_api.get_group_member_profile(event.source.group_id,
-														event.source.user_id)
-		set_id = event.source.group_id
-	elif isinstance(event.source, SourceRoom):
-		subject = line_bot_api.get_room_member_profile(event.source.room_id,
-                                                   event.source.user_id)
-		set_id = event.source.room_id
-	else:
-		subject = line_bot_api.get_profile(event.source.user_id)
-		set_id = event.source.user_id   
+    if isinstance(event.source, SourceGroup):
+        subject = line_bot_api.get_group_member_profile(event.source.group_id,
+                   event.source.user_id)
+        set_id = event.source.group_id
+    elif isinstance(event.source, SourceRoom):
+        subject = line_bot_api.get_room_member_profile(event.source.room_id,event.source.user_id)
+        set_id = event.source.room_id
+    else:
+        subject = line_bot_api.get_profile(event.source.user_id)
+        set_id = event.source.user_id   
     if text == '/help':
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage('Hai kak..ketik /cmd untuk menu lainnya.'))
+            event.reply_token,
+            TextSendMessage('Hai kak..ketik /cmd untuk menu lainnya.'))
 
     elif text == '/cmd':
         line_bot_api.reply_message(
-	    	event.reply_token,
-	    	TextSendMessage("Menu \n"
-	    					"/about\n/help\n/profilku\n/bye\n/ppku\n/idku\n/samehadaku\n/sp\n"
-	    					"/echo {teks}\n/kbbi {teks}\n/gambar {teks}\n/lokasi {teks}\n"
-	    					"/trans {teks}\n/wiki {teks}\n/wikilang {teks}\n/lagu {teks}\n"
-	    				    "/hitung {teks}\n/cariyoutube {teks}\n/zodiak {teks}\n"))
+            event.reply_token,
+            TextSendMessage("Menu \n"
+                            "/about\n/help\n/profilku\n/bye\n/ppku\n/idku\n/samehadaku\n/sp\n"
+                            "/echo {teks}\n/kbbi {teks}\n/gambar {teks}\n/lokasi {teks}\n"
+                            "/trans {teks}\n/wiki {teks}\n/wikilang {teks}\n/lagu {teks}\n"
+                            "/hitung {teks}\n/cariyoutube {teks}\n/zodiak {teks}\n"))
     elif text == '/about':
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage("Hai kak..nama saya Shin Chan \n"
-								"saya akan membuat obrolan kamu jadi makin seru."))
+            event.reply_token,
+            TextSendMessage("Hai kak..nama saya Shin Chan \n"
+                                "saya akan membuat obrolan kamu jadi makin seru."))
 
     elif text == '/samehadaku':
         target = 'https://samehadaku.tv'
@@ -230,23 +229,23 @@ def handle_message(event):
 
     elif text=='/kbbi':
         line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage('Ketik /kbbi {input}'))
+                event.reply_token,
+                TextSendMessage('Ketik /kbbi {input}'))
 
     elif text=='/trans':
         line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage('Ketik /trans sc={}, to={}, {text}'))
-	
+                event.reply_token,
+                TextSendMessage('Ketik /trans sc={}, to={}, {text}'))
+    
     elif text=='/wiki':
         line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage('Ketik /wiki {text}'))
-				
+                event.reply_token,
+                TextSendMessage('Ketik /wiki {text}'))
+                
     elif text=='/wikilang':
         line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage('Ketik /wikilang {language_id}'))
+                event.reply_token,
+                TextSendMessage('Ketik /wikilang {language_id}'))
 
     elif text == '/idku':
         line_bot_api.reply_message(
@@ -443,57 +442,56 @@ def handle_message(event):
                         image_message
                     )
                     return
-	
+    
     elif text[0:].lower().strip().startswith('/kbbi '):
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage(find_kbbi(split2(text))))
-			
+            event.reply_token,
+            TextSendMessage(find_kbbi(split2(text))))
+            
     elif text[0:].lower().strip().startswith('/echo ') :
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage(split3(text)))
-			
+            event.reply_token,
+            TextSendMessage(split3(text)))
+            
     elif text[0:].lower().strip().startswith('/trans ') :
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage(trans(split5(text))))
-	
+            event.reply_token,
+            TextSendMessage(trans(split5(text))))
+    
     elif text[0:].lower().strip().startswith('/wiki ') :
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage(wiki_get(split6(text), set_id=set_id)))
-			
+            event.reply_token,
+            TextSendMessage(wiki_get(split6(text), set_id=set_id)))
+            
     elif text[0:].lower().strip().startswith('/wikilang ') :
         line_bot_api.reply_message(
-			event.reply_token,
-			TextSendMessage(wiki_lang(split7(text), set_id=set_id)))
+            event.reply_token,
+            TextSendMessage(wiki_lang(split7(text), set_id=set_id)))
 
 @handler.add(JoinEvent)
 def handle_join(event):
-	line_bot_api.reply_message(
-		event.reply_token,
-		TextSendMessage(text='Hi, Aku Shin Chan jangan lupa ADD aku dan jadikan obrolanmu jadi tambah seru 􀄃􀆀sparkling eyes􏿿 '))
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='Hi, Aku Shin Chan jangan lupa ADD aku dan jadikan obrolanmu jadi tambah seru 􀄃􀆀sparkling eyes􏿿 '))
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
-	line_bot_api.reply_message(
-		event.reply_token,
-		LocationSendMessage(
-			title=event.message.title, address=event.message.address,
-			latitude=event.message.latitude, longitude=event.message.longitude
-		)
-	)
+    line_bot_api.reply_message(
+        event.reply_token,
+        LocationSendMessage(
+            title=event.message.title, address=event.message.address,
+            latitude=event.message.latitude, longitude=event.message.longitude
+        )
+    )
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
-	line_bot_api.reply_message(
-		event.reply_token,
-		StickerSendMessage(
-			package_id=event.message.package_id,
-			sticker_id=event.message.sticker_id)
-	)
-	
+    line_bot_api.reply_message(
+        event.reply_token,
+        StickerSendMessage(
+            package_id=event.message.package_id,
+            sticker_id=event.message.sticker_id)
+    )
+    
 if __name__ == "__main__":
     app.run()
-
