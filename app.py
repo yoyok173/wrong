@@ -188,7 +188,7 @@ def handle_message(event):
         bs = BeautifulSoup(req.content, "html5lib")
         dataa = bs.find_all("ul",{"class":"posts-items posts-list-container"})
         dataaa = dataa[0].find_all("li",{"class":"post-item tie-standard"})
-        content = "~ Last Update Anime: Samehadaku ~\n\n[ R E S U L T ]\n\n\n"
+        ret_ = "~ Last Update Anime: Samehadaku ~\n\n[ R E S U L T ]\n\n\n"
         num = 0
         i = 0
         j = 0
@@ -203,19 +203,18 @@ def handle_message(event):
             name = data["title"]
             link = data["href"]
             time = date
-            content += "{}).  Judul: {}".format(num, name)
-            content += "\n     Link: {}".format(link)
-            content += "\n     Tanggal Rilis: {}\n\n".format(time)
+            ret_ += "{}).  Judul: {}".format(num, name)
+            ret_ += "\n     Link: {}".format(link)
+            ret_ += "\n     Tanggal Rilis: {}\n\n".format(time)
             te = "✓ Total ada {} update anime.\n\n\n✓ Info update anime selengkapnya, klik:\n➡ https://www.samehadaku.tv/".format(len(dataaa))
             i = i + 1
             j = j + 1
 
         line_bot_api.reply_message(
             event.reply_token, [
-            TextSendMessage(text="Bot using by [ "+profile_name+" ] on Samehadaku:\n\n"+content)])
+            TextSendMessage(text="Bot using by [ "+profile_name+" ] on Samehadaku:\n\n"+ret_)])
 
         return
-
     elif text == '/bye':
         if (userId != 'Uf12a33117e93064e553855f6a4ce80eb'):
             line_bot_api.reply_message(
@@ -358,14 +357,13 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text="Untuk cara menggunakan kalkulator, ketik /hitung 'nominal'\n\nContoh: /hitung (3e+2i)*(2e-3i)\n\nSelamat mencoba (((o(*ﾟ▽ﾟ*)o)))"))
         else:
+            ret_ = ""
             result = requests.get("http://api.mathjs.org/v4/?expr={}".format(search))
             if result == None:
-                content = 'Nominal tidak terdefinisi'
+                ret_ += 'Nominal tidak terdefinisi'
             else:
-                content = content
-                line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=content))
+                ret_ += result.content
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=ret_))
 
 
     elif '/sp' in text:
