@@ -60,7 +60,7 @@ def split5(text):
 
 def split6(text):
 	return text.split('/wiki ', 1)[-1]
-
+                                       
 def split7(text):
 	return text.split('/wikilang ', 1)[-1]
 	
