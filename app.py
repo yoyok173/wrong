@@ -153,7 +153,17 @@ def handle_message(event):
     profile_name = profile.display_name
     profile_picture = profile.picture_url
     profile_sm = profile.status_message
-    
+ 	if isinstance(event.source, SourceGroup):
+		subject = line_bot_api.get_group_member_profile(event.source.group_id,
+														event.source.user_id)
+		set_id = event.source.group_id
+	elif isinstance(event.source, SourceRoom):
+		subject = line_bot_api.get_room_member_profile(event.source.room_id,
+                                                   event.source.user_id)
+		set_id = event.source.room_id
+	else:
+		subject = line_bot_api.get_profile(event.source.user_id)
+		set_id = event.source.user_id   
     if text == '/help':
         line_bot_api.reply_message(
 			event.reply_token,
