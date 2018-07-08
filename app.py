@@ -357,13 +357,11 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text="Untuk cara menggunakan kalkulator, ketik /hitung 'nominal'\n\nContoh: /hitung (3e+2i)*(2e-3i)\n\nSelamat mencoba (((o(*ﾟ▽ﾟ*)o)))"))
         else:
-            ret_ = ""
-            result = requests.get("http://api.mathjs.org/v4/?expr={}".format(search))
-            if result == None:
-                ret_ += 'Nominal tidak terdefinisi'
-            else:
-                ret_ += result.txt
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(ret_)))
+            with requests.session() as web:
+                web.headers["user-agent"] = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+            r = web.get("http://api.mathjs.org/v4/?expr={}".format(urllib.parse.quote(search)))
+            data=r.text
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(data)))
 
     elif text == '/sp':
         start = time.time()
