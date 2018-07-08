@@ -1,5 +1,6 @@
 from gtts import gTTS
 from kbbi import KBBI
+from time import sleep
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from googletrans import Translator
@@ -462,7 +463,7 @@ def handle_message(event):
 def handle_join(event):
 	line_bot_api.reply_message(
 		event.reply_token,
-		TextSendMessage(text='Hi, Aku Shin Chan jangan lupa ADD aku dan jadikan obrolanmu jadi tambah seru 􀄃􀆀sparkling eyes􏿿 ' + event.source.type))
+		TextSendMessage(text='Hi, Aku Shin Chan jangan lupa ADD aku dan jadikan obrolanmu jadi tambah seru 􀄃􀆀sparkling eyes􏿿 '))
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
