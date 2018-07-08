@@ -154,7 +154,7 @@ def handle_message(event):
     profile_picture = profile.picture_url
     profile_sm = profile.status_message
     
-    if ['help','/help'] in text:
+    if text == '/help':
         line_bot_api.reply_message(
 			event.reply_token,
 			TextSendMessage('Hai kak..ketik /cmd untuk menu lainnya.'))
