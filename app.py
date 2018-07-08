@@ -362,7 +362,7 @@ def handle_message(event):
             if result == None:
                 ret_ += 'Nominal tidak terdefinisi'
             else:
-                ret_ += result.content
+                ret_ += result.txt
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(ret_)))
 
 
@@ -371,7 +371,7 @@ def handle_message(event):
         elapsed_time = time.time() - start
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="{} detik".format(elapsed_time)))
+            TextSendMessage(text=elapsed_time))
 
 
     elif '/cariyoutube ' in text:
