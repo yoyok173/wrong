@@ -31,3 +31,4 @@ pafy
 youtube-dl
 googletrans
 wikipedia
+alembic==0.8.9
