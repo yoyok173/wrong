@@ -8,18 +8,26 @@ from urllib.parse import urlparse, urlencode
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
 from humanfriendly import format_timespan, format_size, format_number, format_length
-import time, random, sys, json, codecs, threading, glob, re, string, os, requests, six, ast, pytz, urllib3, urllib.parse, traceback, atexit, html5lib, wikipedia, goslate
+import time, random, sys, json, codecs, re, string, os, requests, six, ast, pytz, urllib3, urllib.parse, traceback,  html5lib, wikipedia
 
-from flask import Flask, request, make_response
+from flask import Flask, request, abort
 
 from linebot import (
     LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
-    InvalidSignatureError, LineBotApiError
+	InvalidSignatureError
 )
-from linebot.models import *
-
+from linebot.models import (
+	MessageEvent, TextMessage, TextSendMessage, ImageSendMessage, SourceGroup, SourceRoom,
+	TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+	ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URITemplateAction,
+	PostbackTemplateAction, DatetimePickerTemplateAction,
+	CarouselTemplate, CarouselColumn, PostbackEvent,
+	StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
+	ImageMessage, VideoMessage, AudioMessage, FileMessage,
+	UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
+)
 translator = Translator()
 wiki_settings = {}
 app = Flask(__name__)
@@ -48,7 +56,7 @@ def split2(text):
 	return text.split('/kbbi ', 1)[-1]
 	
 def split3(text):
-		return text.split('/echo ', 1)[-1]
+	return text.split('/echo ', 1)[-1]
 
 def split5(text):
 	return text.split('/trans ', 1)[-1]
