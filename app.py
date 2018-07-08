@@ -1,5 +1,4 @@
 from gtts import gTTS
-from time import sleep
 from kbbi import KBBI
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
