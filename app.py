@@ -1,14 +1,13 @@
 from gtts import gTTS
 from kbbi import KBBI
-from time import sleep
+import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from googletrans import Translator
 from urllib.parse import urlparse, urlencode
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
-from humanfriendly import format_timespan, format_size, format_number, format_length
-import time, random, sys, json, codecs, re, string, os, requests, six, ast, pytz, urllib3, urllib.parse, traceback,  html5lib, wikipedia
+import random, sys, json, codecs, re, string, os, requests, six, ast, pytz, urllib3, urllib.parse, traceback,  html5lib, wikipedia
 
 from flask import Flask, request, abort
 
