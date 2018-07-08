@@ -29,7 +29,6 @@ from linebot.models import (
     UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 translator = Translator()
-start = time.time()
 wiki_settings = {}
 app = Flask(__name__)
 
@@ -366,14 +365,11 @@ def handle_message(event):
                 ret_ += result.txt
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(ret_)))
 
-
     elif text == '/sp':
+        start = time.time()
         elapsed_time = time.time() - start
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=elapsed_time))
-
-
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=format(str(elapsed_time))))
+        
     elif '/cariyoutube ' in text:
         query = text.replace("/cariyoutube ","")
         with requests.session() as s:
